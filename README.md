@@ -6,7 +6,7 @@ A front-end project built using HTML, CSS, and JavaScript.
 
 1. Download the repository as ZIP  
 2. Extract the files  
-3. Open `project.html` in any browser  
+3. Open `index.html` in any browser  
 
 OR  
 
