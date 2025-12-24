@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Artist Gallery Project</title>
+  <style>
+    body { font-family: Arial; background:#f2f2f2; margin:0 }
+    header { background:#111; color:#fff; padding:15px }
+    section { padding:15px }
+    .hide { display:none }
+    button { padding:6px 10px; margin:5px }
+    img { width:150px; margin:10px }
+  </style>
+</head>
+<body>
+
+<header>
+  <h2>🎨 Artist Gallery</h2>
+  <button onclick="show('home')">Home</button>
+  <button onclick="show('signup')">Sign Up</button>
+  <button onclick="show('login')">Login</button>
+  <button onclick="logout()">Logout</button>
+</header>
+
+<section id="home">
+  <h3>Landing Page</h3>
+  <div id="allImages"></div>
+</section>
+
+<section id="signup" class="hide">
+  <h3>Sign Up</h3>
+  <input id="su_user" placeholder="Username"><br><br>
+  <input id="su_email" placeholder="Email"><br><br>
+  <input id="su_pass" type="password" placeholder="Password"><br><br>
+  <button onclick="signup()">Create Account</button>
+</section>
+
+<section id="login" class="hide">
+  <h3>Login</h3>
+  <input id="li_email" placeholder="Email"><br><br>
+  <input id="li_pass" type="password" placeholder="Password"><br><br>
+  <button onclick="login()">Login</button>
+</section>
+
+<section id="dashboard" class="hide">
+  <h3>Dashboard</h3>
+  <input type="file" onchange="upload(event)"><br><br>
+  <div id="myImages"></div>
+</section>
+
+<script>
+  let users = {};
+  let currentUser = null;
+
+  function show(id){
+    document.querySelectorAll("section").forEach(s=>s.classList.add("hide"));
+    document.getElementById(id).classList.remove("hide");
+    loadAll();
+    loadMine();
+  }
+
+  function signup(){
+    let u = su_user.value;
+    users[u] = { email: su_email.value, pass: su_pass.value, images: [] };
+    alert("Signup successful");
+    show('login');
+  }
+
+  function login(){
+    let e = li_email.value, p = li_pass.value;
+    for(let u in users){
+      if(users[u].email===e && users[u].pass===p){
+        currentUser = u;
+        show('dashboard');
+        return;
+      }
+    }
+    alert("Invalid login");
+  }
+
+  function logout(){
+    currentUser=null;
+    show('home');
+  }
+
+  function upload(e){
+    let img = URL.createObjectURL(e.target.files[0]);
+    users[currentUser].images.push(img);
+    loadMine(); loadAll();
+  }
+
+  function loadMine(){
+    let d=document.getElementById("myImages");
+    if(!d) return;
+    d.innerHTML="";
+    if(currentUser)
+      users[currentUser].images.forEach(i=>d.innerHTML+=`<img src="${i}">`);
+  }
+
+  function loadAll(){
+    let d=document.getElementById("allImages");
+    if(!d) return;
+    d.innerHTML="";
+    Object.values(users).forEach(u=>{
+      u.images.forEach(i=>d.innerHTML+=`<img src="${i}">`);
+    });
+  }
+
+  show('home');
+</script>
+
+</body>
+</html>
